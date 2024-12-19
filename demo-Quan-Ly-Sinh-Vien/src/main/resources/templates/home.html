@@ -8,43 +8,100 @@
 
     <style>
         body {
-            background-color: #f0f2f5;
+            background-color: #eef2f7;
+            font-family: 'Arial', sans-serif;
+            color: #333;
         }
+
         .container {
             margin-top: 50px;
         }
+
+        h1 {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-add {
+            margin-bottom: 20px;
+        }
+
         .table-container {
             margin-top: 20px;
         }
-        .btn-add {
-            margin-bottom: 20px;
+
+        table {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+
+        td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn {
+            border-radius: 50px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #b02a37;
+        }
+
+        .btn-close {
+            filter: invert(1);
         }
     </style>
 </head>
 <body>
 
-    <div class="container-fluid">
-        <div class="d-flex">
-            <form action="/logout" method="post" class="d-inline">
-                <button type="submit" class="btn btn-danger">Logout</button>
+<div class="container-fluid py-3 bg-light border-bottom">
+    <div class="d-flex justify-content-end">
+        <form action="/logout" method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+</div>
+
+<!--    <div class="container-fluid py-3 bg-light border-bottom" sec:authorize="hasRole('ROLE_ADMIN')">
+        <div class="d-flex justify-content-start">
+            <form action="/students/connections" method="get" class="d-inline">
+                <button type="submit" class="btn btn-primary">List Connection Info</button>
             </form>
         </div>
-    </div>
-
-<!--    <div class="container-fluid">-->
-<!--        <div class="d-flex" sec:authorize="hasRole('ROLE_ADMIN')">-->
-<!--            <form action="/students/connections" method="get" class="d-inline">-->
-<!--                <button type="submit" class="btn btn-primary">List Connection Info</button>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
+    </div>-->
 
 <div class="container">
     <h1 class="text-center">Student Management</h1>
-    <div class="mb-3">
-        <form action="/students/search" method="get">
+    <div class="mb-4">
+        <form action="/students/search" method="get" class="input-group">
             <input type="text" name="query" class="form-control" placeholder="Search students by name or email">
-            <button type="submit" class="btn btn-primary mt-2">Search</button>
+            <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
     <div class="text-end btn-add" sec:authorize="hasRole('ROLE_ADMIN')">
@@ -86,7 +143,7 @@
             </div>
             <div class="modal-body">
                 <form id="studentForm" th:action="@{/students}" method="post">
-                    <input type="hidden" name="_method" value="post" /> <!-- Thêm trường ẩn để gửi phương thức PUT -->
+                    <input type="hidden" name="_method" value="post" />
                     <input type="hidden" id="studentId" name="id" />
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
@@ -116,18 +173,15 @@
         document.querySelector('input[name="_method"]').value = '';
     }
     function populateEditModal(button) {
-        console.log('Button clicked:', button);
         var id = button.getAttribute('data-id');
         var name = button.getAttribute('data-name');
         var email = button.getAttribute('data-email');
-        console.log('ID:', id, 'Name:', name, 'Email:', email);
         document.getElementById('studentId').value = id;
         document.getElementById('name').value = name;
         document.getElementById('email').value = email;
         document.querySelector('.modal-title').textContent = 'Edit Student';
         document.getElementById('studentForm').setAttribute('action', '/students/update/' + id);
         document.querySelector('input[name="_method"]').value = 'PUT';
-        console.log(document.querySelector('input[name="_method"]').value)
     }
     function deleteStudent(button) {
         var id = button.getAttribute('data-id');
@@ -136,7 +190,7 @@
                 method: 'DELETE'
             }).then(response => {
                 if (response.ok) {
-                    window.location.reload(); // Tải lại trang để cập nhật danh sách sinh viên
+                    window.location.reload();
                 }
             });
         }
